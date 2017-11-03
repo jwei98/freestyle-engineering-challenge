@@ -1,9 +1,9 @@
-Number of DRINKS to order: 
+Number of each DRINK to order: 
 drink1: 2
 
 Number of each FOOD to order: 
-food5: 2
+food1: 2
 
 Orders for each guest: 
-Rishi Tripathy: drink1, food5
-Joe Lee: drink1, food5
+Rishi Tripathy: drink1, food1
+Joe Lee: drink1, food1
