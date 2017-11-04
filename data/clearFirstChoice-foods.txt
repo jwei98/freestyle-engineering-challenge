@@ -1,0 +1,5 @@
+food1:1
+food2:2.5
+food3:4.95
+food4:5.5
+food5:6.0

@@ -1,0 +1,5 @@
+drink1:5
+drink2:4
+drink3:3
+drink4:2
+drink5:1

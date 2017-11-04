@@ -1,0 +1,5 @@
+drink1:1.0
+drink2:2.54
+drink3:3.2
+drink4:4.99
+drink5:5.00

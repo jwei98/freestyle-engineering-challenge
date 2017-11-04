@@ -1,9 +1,12 @@
 Number of each DRINK to order: 
-drink1: 2
+drink5: 2
 
 Number of each FOOD to order: 
-food1: 2
+food3: 1
+food2: 1
 
 Orders for each guest: 
-Rishi Tripathy: drink1, food1
-Joe Lee: drink1, food1
+Rishi Tripathy: drink5, food2. 
+     Happiness Rating= 0.8666667 / 1.0
+Joe Lee: drink5, food3. 
+     Happiness Rating= 0.70000005 / 1.0

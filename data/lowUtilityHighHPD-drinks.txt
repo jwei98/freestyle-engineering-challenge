@@ -2,4 +2,4 @@ drink1:1
 drink2:2
 drink3:3
 drink4:4
-drink5:5
+drink5:0.01

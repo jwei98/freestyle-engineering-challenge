@@ -12,6 +12,7 @@ public class Guest {
 	public Item foodPref = new Item();
 	public Item drinkPref = new Item();
 	public float currentUtility = 0;
+	public float spent = 0;
 	
 	// initializer
 	public Guest(String name) {
@@ -19,17 +20,23 @@ public class Guest {
 	}
 	
 	// add a drink or food preference to guest's list of preferences
-	public void addPreference(Item newPref) {	
+	public void addPreference(Item newPref) {
 		// set guest's initial preferences to the cheapest preferences
 		if (newPref.type.equals("Food")) {
-			if (newPref.price < foodPref.price) {
-				foodPref = newPref;
+			if (newPref.price < this.foodPref.price) {
+				if (!this.foodPref.name.equals("Generic Item")) {
+					this.preferences.add(this.foodPref);
+				}
+				purchase(newPref);
 				return;
 			}
 		}
 		else {
-			if (newPref.price < drinkPref.price) {
-				drinkPref = newPref;
+			if (newPref.price < this.drinkPref.price) {
+				if (!this.drinkPref.name.equals("Generic Item")) {
+					this.preferences.add(this.drinkPref);
+				}
+				purchase(newPref);
 				return;
 			}
 		}
@@ -39,19 +46,27 @@ public class Guest {
 	
 	// update instance variables related to utility, budget, food/drink preferences
 	private void purchase(Item item) {
-		float previousUtility;
+		float previousUtility = 0;
+		float previousSpent = 0;
 		if (item.type.equals("Food")) {
-			previousUtility = this.foodPref.utilityRank;
+			previousSpent = this.foodPref.price;
+			previousUtility = this.foodPref.utility;
 			this.foodPref = item;
 		}
 		else {
-			previousUtility = this.drinkPref.utilityRank;
+			previousSpent = this.drinkPref.price;
+			previousUtility = this.drinkPref.utility;
 			this.drinkPref = item;
 		}
 		
+		// for case of first item being purchased
+		if (previousSpent == Float.MAX_VALUE) {
+			previousSpent = 0;
+		}
+		
 		// update guest's current best utility and budget they have left
-		this.currentUtility = this.currentUtility - previousUtility + item.utilityRank;
-		this.budget = this.budget - this.foodPref.price - this.drinkPref.price;
+		this.currentUtility = this.currentUtility - previousUtility + item.utility;
+		this.spent = this.spent - previousSpent + item.price;
 	}
 	
 	
@@ -65,30 +80,29 @@ public class Guest {
 		float comparePrice = 0;
 		float compareUtility;
 		Item itemHighestHPD;
+		
 		while (true) {
+			
 			// break if no more preferences to check or have no more money to spend
 			if (this.preferences.size() == 0) {
 				break;
 			}
-			if (this.budget == 0) {
+			if (this.budget == this.spent) {
 				break;
 			}
 			
 			// take item with first/highest HPD in list
 			itemHighestHPD = this.preferences.remove(0);
-			
 			// depending on type of item, get the price and utility of the current best item
 			if (itemHighestHPD.type.equals("Food")) {
 				comparePrice = this.foodPref.price;
-				compareUtility = this.foodPref.utilityRank;
+				compareUtility = this.foodPref.utility;
 			}
 			else {
 				comparePrice = this.drinkPref.price;
-				compareUtility = this.drinkPref.utilityRank;
+				compareUtility = this.drinkPref.utility;
 			}
-			
-			// check if it's affordable and if it increases my utility. If it does, then purchase it:
-			if ((itemHighestHPD.price - comparePrice < this.budget) && (itemHighestHPD.utilityRank > compareUtility)) {
+			if ((itemHighestHPD.price - comparePrice < this.budget - this.spent) && (itemHighestHPD.utility > compareUtility)) {
 				this.purchase(itemHighestHPD);
 			}
 		}
@@ -100,8 +114,8 @@ public class Guest {
 	}
 	
 	// returns money that a guest did not use
-	public float getUnusedMoney(int originalBudget) {
-		return originalBudget - this.budget;
+	public float getUnusedMoney() {
+		return this.budget - this.spent;
 	}
 	
 }

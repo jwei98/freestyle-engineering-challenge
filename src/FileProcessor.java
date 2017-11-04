@@ -58,7 +58,7 @@ public class FileProcessor {
 	
 	// gets budget from command line arguments, otherwise hard-coded
 	private static int getBudget(String[] args) {
-		int totalBudget = 5;
+		int totalBudget = 10;
 		if (args.length > 0) {
 		    try {
 		    	totalBudget = Integer.parseInt(args[0]);
@@ -73,8 +73,8 @@ public class FileProcessor {
 	// reads drink and food files into menus, and people file into guest list
 	private static void readFiles(HashMap<String,Float> drinksMenu, HashMap<String,Float> foodMenu, ArrayList<Guest> guestList) {
 		// initialize files
-		String drinksFile = "./data/drinks.txt";
-		String foodFile = "./data/food.txt";
+		String drinksFile = "./data/lowUtilityHighHPD-drinks.txt";
+		String foodFile = "./data/lowUtilityHighHPD-foods.txt";
 		String peopleFile = "./data/people.txt";
 		
 		// read text files
@@ -100,7 +100,7 @@ public class FileProcessor {
 			String[] parts;
 			try{
 				while ((currentLine = br.readLine()) != null ) {
-					parts = currentLine.split(":");
+					parts = currentLine.replaceAll("\\s","").split(":");
 					map.put(parts[0], Float.valueOf(parts[1]));
 				}
 			}
@@ -118,8 +118,8 @@ public class FileProcessor {
 			try{
 				while ((guestName = br.readLine()) != null ) {
 					Guest newGuest = new Guest(guestName);
-					drinks = br.readLine().split(",");
-					foods = br.readLine().split(",");
+					drinks = br.readLine().replaceAll("\\s","").split(",");
+					foods = br.readLine().replaceAll("\\s","").split(",");
 					int numDrinkPrefs = drinks.length;
 					int numFoodPrefs = foods.length;
 					
@@ -185,7 +185,7 @@ public class FileProcessor {
 			System.out.println("Orders for each guest: ");
 			// print individual orders of guests
 			for (Guest guest : guestList) {
-				System.out.println(guest.name + ": " + guest.drinkPref.name + ", " + guest.foodPref.name);
+				System.out.println(guest.name + ": " + guest.drinkPref.name + ", " + guest.foodPref.name + ". \n     Happiness Rating= " + guest.currentUtility + " / 1.0");
 			}
 		}
 		
