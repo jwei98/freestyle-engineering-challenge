@@ -1,5 +1,5 @@
-drink1:1
-drink2:2
-drink3:3
-drink4:4
+drink1:1.10
+drink2:2.22
+drink3:3.32
+drink4:4.46
 drink5:0.01

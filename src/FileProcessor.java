@@ -5,8 +5,14 @@ import java.util.HashMap;
 /** Main Processor for Task */
 
 public class FileProcessor {
-		
+	
 	public static void main(String[] args) {
+		// initialize files and budget
+		String drinksFile = "./data/lowUtilityHighHPD-drinks.txt";
+		String foodFile = "./data/lowUtilityHighHPD-foods.txt";
+		String peopleFile = "./data/people.txt";
+		int budget = 15;
+		
 		// tracks drink & food prices
 		HashMap<String,Float> drinksMenu = new HashMap<String,Float>();
 		HashMap<String,Float> foodMenu = new HashMap<String,Float>();
@@ -15,16 +21,17 @@ public class FileProcessor {
 		HashMap<String,Integer> foodCount = new HashMap<String,Integer>();
 		// keep list of all guests
 		ArrayList<Guest> guestList = new ArrayList<Guest>();
+		float unusedMoney = 0;
 		
 		// setup so program outputs into text file
 		PrintStream out = null;
 		setupOutputStream(out);
 		
 		// read text files and input into maps
-		readFiles(drinksMenu, foodMenu, guestList);
+		readFiles(drinksFile, foodFile, peopleFile, drinksMenu, foodMenu, guestList);
 		
 		// get budget and calculate how much money each person gets
-		int totalBudget = getBudget(args);
+		int totalBudget = getBudget(budget, args);
 		float budgetPerPerson = (float)totalBudget / (float)guestList.size();		
 		
 		// loop through people and calculate their preferences and update total drink/food counts
@@ -32,15 +39,13 @@ public class FileProcessor {
 		for (Guest guest : guestList) {
 			prefs = guest.calcPrefs(budgetPerPerson);
 			updateTotalCounts(prefs[0], prefs[1], drinkCount, foodCount);
+			unusedMoney = unusedMoney + guest.getUnusedMoney();
 		}
 		
 		// output results
-		outputResultsToTextFile(drinkCount, foodCount, guestList);
+		outputResultsToTextFile(drinkCount, foodCount, guestList, unusedMoney, budgetPerPerson);
 		
 	}
-	
-	
-	
 	
 	
 	/* Helper Functions used in main processor */
@@ -57,8 +62,8 @@ public class FileProcessor {
 	}
 	
 	// gets budget from command line arguments, otherwise hard-coded
-	private static int getBudget(String[] args) {
-		int totalBudget = 10;
+	private static int getBudget(int hardCodeBudget, String[] args) {
+		int totalBudget = hardCodeBudget;
 		if (args.length > 0) {
 		    try {
 		    	totalBudget = Integer.parseInt(args[0]);
@@ -71,12 +76,7 @@ public class FileProcessor {
 	}
 	
 	// reads drink and food files into menus, and people file into guest list
-	private static void readFiles(HashMap<String,Float> drinksMenu, HashMap<String,Float> foodMenu, ArrayList<Guest> guestList) {
-		// initialize files
-		String drinksFile = "./data/lowUtilityHighHPD-drinks.txt";
-		String foodFile = "./data/lowUtilityHighHPD-foods.txt";
-		String peopleFile = "./data/people.txt";
-		
+	private static void readFiles(String drinksFile, String foodFile, String peopleFile, HashMap<String,Float> drinksMenu, HashMap<String,Float> foodMenu, ArrayList<Guest> guestList) {		
 		// read text files
 		try {
 			FileReader drinksFileReader = new FileReader(drinksFile);
@@ -143,9 +143,7 @@ public class FileProcessor {
 						newGuest.addPreference(newFood);
 						rank++;
 					}
-					
 					guestList.add(newGuest);
-					
 				}
 			}
 			catch (IOException e) {
@@ -174,18 +172,21 @@ public class FileProcessor {
 		
 		
 		// output results from algorithm to text file
-		public static void outputResultsToTextFile(HashMap<String,Integer> drinkCount, HashMap<String,Integer> foodCount, ArrayList<Guest> guestList) {
+		public static void outputResultsToTextFile(HashMap<String,Integer> drinkCount, HashMap<String,Integer> foodCount, ArrayList<Guest> guestList, float unusedMoney, float budgetPerPerson) {
 			// print total number of each drink/food to order
-			System.out.println("Number of each DRINK to order: ");
+			System.out.printf("LEFTOVER MONEY: $%.2f\n\n",unusedMoney);
+			System.out.println("NUMBER OF EACH DRINK TO ORDER: ");
 			drinkCount.forEach((key, value) -> System.out.println(key + ": " + value));
 			System.out.println();
-			System.out.println("Number of each FOOD to order: ");
+			System.out.println("NUMBER OF EACH FOOD TO ORDER: ");
 			foodCount.forEach((key, value) -> System.out.println(key + ": " + value));
 			System.out.println();
-			System.out.println("Orders for each guest: ");
+			System.out.printf("Each guest got an alloted: $%.2f \n",budgetPerPerson);
+			System.out.println("ORDERS FOR EACH GUEST: ");
 			// print individual orders of guests
 			for (Guest guest : guestList) {
-				System.out.println(guest.name + ": " + guest.drinkPref.name + ", " + guest.foodPref.name + ". \n     Happiness Rating= " + guest.currentUtility + " / 1.0");
+				System.out.printf("%s: %s, %s \n     Happiness Rating= %.2f / 1.00 \n     Money Spent= $%.2f\n\n",
+						guest.name, guest.drinkPref.name, guest.foodPref.name, guest.currentUtility, guest.spent);
 			}
 		}
 		

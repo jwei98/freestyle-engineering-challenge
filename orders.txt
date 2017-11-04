@@ -1,12 +1,25 @@
-Number of each DRINK to order: 
+LEFTOVER MONEY: $2.51
+
+NUMBER OF EACH DRINK TO ORDER: 
+drink4: 1
 drink5: 2
 
-Number of each FOOD to order: 
+NUMBER OF EACH FOOD TO ORDER: 
 food3: 1
 food2: 1
+food5: 1
 
-Orders for each guest: 
-Rishi Tripathy: drink5, food2. 
-     Happiness Rating= 0.8666667 / 1.0
-Joe Lee: drink5, food3. 
-     Happiness Rating= 0.70000005 / 1.0
+Each guest got an alloted: $5.00 
+ORDERS FOR EACH GUEST: 
+Rob Smith: drink5, food2 
+     Happiness Rating= 0.87 / 1.00 
+     Money Spent= $4.23
+
+John North: drink5, food3 
+     Happiness Rating= 0.70 / 1.00 
+     Money Spent= $3.79
+
+Alex Bale: drink4, food5 
+     Happiness Rating= 1.00 / 1.00 
+     Money Spent= $4.47
+
